@@ -15,6 +15,7 @@ const MOCK_TIMELINE: TimelineItem[] = [
 
 function App() {
   const chronos = useChronos(MOCK_TIMELINE);
+  useAudio(chronos.activeItemIndex, MOCK_TIMELINE);
 
   return (
     <div className="relative w-full h-screen bg-nano-bg text-slate-200 overflow-hidden font-sans selection:bg-nano-green selection:text-nano-bg">
