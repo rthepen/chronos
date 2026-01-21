@@ -1,4 +1,4 @@
-import { TimelineItem } from '../types/chronos';
+import type { TimelineItem } from '../types/chronos';
 
 // Define the shape of our source data (matches subset of workoutdatabase.json)
 export interface Exercise {
