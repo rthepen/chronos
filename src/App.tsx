@@ -28,32 +28,33 @@ function App() {
   const chronos = useChronos(timeline);
   useAudio(chronos.activeItemIndex, timeline);
 
-  <div className="fixed inset-0 bg-nano-bg text-white overflow-hidden font-mono select-none">
-    {/* Layer 1: The Timeline (Full Height, Scrollable) */}
-    <div className="absolute inset-0">
-      <TimelineView
-        items={timeline}
-        activeItemIndex={chronos.activeItemIndex}
-        activeItemProgress={chronos.activeItemProgress}
-        scrollOffsetPixels={chronos.scrollOffsetPixels}
+  return (
+    <div className="fixed inset-0 bg-nano-bg text-white overflow-hidden font-mono select-none">
+      {/* Layer 1: The Timeline (Full Height, Scrollable) */}
+      <div className="absolute inset-0">
+        <TimelineView
+          items={timeline}
+          activeItemIndex={chronos.activeItemIndex}
+          activeItemProgress={chronos.activeItemProgress}
+          scrollOffsetPixels={chronos.scrollOffsetPixels}
+        />
+      </div>
+
+      {/* Layer 2: Master Clock (Overlay) */}
+      <MasterClock
+        timeElapsed={chronos.timeElapsed}
+        isFrozen={chronos.isStartupFrozen}
       />
+
+      {/* Layer 3: Control Deck (Fixed Bottom) */}
+      <ControlDeck
+        isFrozen={chronos.isStartupFrozen}
+        onRelease={chronos.releaseStart}
+      />
+
+      {/* Gradient Ambient Effects */}
+      <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-nano-bg to-transparent pointer-events-none z-40" />
     </div>
-
-    {/* Layer 2: Master Clock (Overlay) */}
-    <MasterClock
-      timeElapsed={chronos.timeElapsed}
-      isFrozen={chronos.isStartupFrozen}
-    />
-
-    {/* Layer 3: Control Deck (Fixed Bottom) */}
-    <ControlDeck
-      isFrozen={chronos.isStartupFrozen}
-      onRelease={chronos.releaseStart}
-    />
-
-    {/* Gradient Ambient Effects */}
-    <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-nano-bg to-transparent pointer-events-none z-40" />
-  </div>
   )
 }
 
