@@ -1,62 +1,63 @@
 import React from 'react';
-import clsx from 'clsx';
-import type { TimelineItem as TimelineItemType } from '../../types/chronos';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { TimelineItem as TimelineItemType } from '../../types/chronos';
 
 interface Props {
     item: TimelineItemType;
-    isActive?: boolean;
-    isPast?: boolean;
-    progress?: number; // 0 to 1
+    isActive: boolean;
+    isPast: boolean;
 }
 
-export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress = 0 }) => {
+export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast }) => {
+    // 1. Determine Color Scheme based on Type
+    const getColors = (type: string) => {
+        switch (type) {
+            case 'WORK': return 'border-[#39FF14] bg-[#39FF14]/10 text-[#39FF14] shadow-[0_0_15px_rgba(57,255,20,0.3)]';
+            case 'REST': return 'border-[#00F0FF] bg-[#00F0FF]/10 text-[#00F0FF]';
+            case 'PREPARE': return 'border-orange-500 bg-orange-500/10 text-orange-500';
+            case 'ROUND_REST': return 'border-purple-500 bg-purple-500/10 text-purple-500';
+            case 'FINISH': return 'border-yellow-400 bg-yellow-400/10 text-yellow-400';
+            default: return 'border-slate-700 bg-slate-800 text-slate-400';
+        }
+    };
+
+    const colorClasses = getColors(item.type);
+
+    // 2. Base Height & Layout
+    const baseClasses = "relative w-full mb-2 p-4 border-l-4 rounded-r-md transition-all duration-300 flex items-center justify-between";
+    const stateClasses = isActive
+        ? `scale-105 z-10 ${colorClasses} opacity-100`
+        : isPast
+            ? "opacity-30 border-slate-700 grayscale"
+            : "opacity-60 border-slate-700 hover:opacity-80";
+
     return (
         <div
-            className={clsx(
-                "relative w-full h-16 mb-2 rounded-lg overflow-hidden flex items-center px-4 transition-all duration-75 ease-linear",
-                // Active: Bright, scaled up slightly
-                isActive && "scale-105 shadow-xl border border-slate-700 z-10",
-                isActive && item.type === 'WORK' && "bg-slate-800",
-                isActive && item.type !== 'WORK' && "bg-slate-900", // Darker for rest phases
-
-                // Past: Dimmed significantly
-                isPast && "opacity-30 grayscale",
-
-                // Future: Standard opacity
-                !isActive && !isPast && "bg-slate-900/50 opacity-60",
-
-                // Type-Specific Border/Glow for Active/Future
-                item.type === 'WORK' && !isPast && "border-l-4 border-l-nano-green bg-nano-green/10",
-                (item.type === 'REST') && !isPast && "border-l-4 border-l-nano-blue bg-nano-blue/10",
-                (item.type === 'PREPARE') && !isPast && "border-l-4 border-l-nano-orange bg-nano-orange/10",
-                (item.type === 'ROUND_REST') && !isPast && "border-l-4 border-l-purple-500 bg-purple-500/10",
-                item.type === 'FINISH' && !isPast && "border-l-4 border-l-nano-gold bg-nano-gold/10"
-            )}
+            className={twMerge(baseClasses, stateClasses)}
+            style={{ minHeight: isActive ? '120px' : '80px' }}
         >
-            {/* Progress Fill */}
-            <div
-                className={clsx(
-                    "absolute top-0 left-0 h-full opacity-30 transition-none", // transition-none for instant updates
-                    item.type === 'WORK' && "bg-nano-green",
-                    (item.type === 'REST') && "bg-nano-blue",
-                    (item.type === 'PREPARE') && "bg-nano-orange",
-                    (item.type === 'ROUND_REST') && "bg-purple-500",
-                    item.type === 'FINISH' && "bg-yellow-400"
-                )}
-                style={{ width: `${progress * 100}%` }}
-            />
+            {/* Progress Bar Background (Fill) */}
+            {isActive && (
+                <div
+                    className="absolute inset-0 z-0 bg-current opacity-20 origin-left transition-transform duration-75 ease-linear"
+                    style={{ transform: `scaleX(${item.progress || 0})` }}
+                />
+            )}
 
             {/* Content */}
-            <div className="relative z-10 flex justify-between w-full items-center">
-                <span className={clsx(
-                    "font-bold uppercase tracking-wider text-sm",
-                    isActive ? "text-white" : "text-slate-500"
-                )}>
+            <div className="relative z-10 flex flex-col">
+                <span className="text-xs font-bold uppercase tracking-widest opacity-70">
+                    {item.type.replace('_', ' ')}
+                </span>
+                <span className="text-lg font-bold md:text-xl truncate max-w-[250px]">
                     {item.label}
                 </span>
-                <span className="font-mono text-slate-400 text-sm tabular-nums">
-                    {Math.floor((item.durationMs / 1000) / 60)}:{((item.durationMs / 1000) % 60).toString().padStart(2, '0')}
-                </span>
+            </div>
+
+            {/* Duration */}
+            <div className="relative z-10 text-2xl font-mono tabular-nums font-bold">
+                {Math.ceil(item.durationMs / 1000)}s
             </div>
         </div>
     );
