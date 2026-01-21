@@ -5,6 +5,7 @@
  */
 
 export interface TimelineItem {
+    id: string;
     durationMs: number;
     status: 'work' | 'rest' | 'switch';
     progress: number; // 0 to 1
