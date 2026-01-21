@@ -27,8 +27,8 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
 
                 // Type-Specific Border/Glow for Active/Future
                 item.type === 'WORK' && !isPast && "border-l-4 border-l-nano-green",
-                (item.type === 'REST' || item.type === 'ROUND_REST') && !isPast && "border-l-4 border-l-nano-blue",
-                item.type === 'PREPARE' && !isPast && "border-l-4 border-l-nano-orange",
+                (item.type === 'REST') && !isPast && "border-l-4 border-l-nano-blue",
+                (item.type === 'PREPARE' || item.type === 'ROUND_REST') && !isPast && "border-l-4 border-l-nano-orange",
                 item.type === 'FINISH' && !isPast && "border-l-4 border-l-yellow-400"
             )}
         >
@@ -37,8 +37,8 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
                 className={clsx(
                     "absolute top-0 left-0 h-full opacity-30 transition-none", // transition-none for instant updates
                     item.type === 'WORK' && "bg-nano-green",
-                    (item.type === 'REST' || item.type === 'ROUND_REST') && "bg-nano-blue",
-                    item.type === 'PREPARE' && "bg-nano-orange",
+                    (item.type === 'REST') && "bg-nano-blue",
+                    (item.type === 'PREPARE' || item.type === 'ROUND_REST') && "bg-nano-orange",
                     item.type === 'FINISH' && "bg-yellow-400"
                 )}
                 style={{ width: `${progress * 100}%` }}
