@@ -28,6 +28,8 @@ export default function App() {
   const {
     timeElapsed,
     activeItemIndex,
+    activeItemProgress,
+    scrollOffsetPixels,
     isStartupFrozen,
     startupOffsetMs,
     toggleFreeze
@@ -43,8 +45,10 @@ export default function App() {
       {/* Layer 1: The Timeline */}
       <div className="absolute inset-0 z-0">
         <TimelineView
-          timeline={timeline}
+          items={timeline}
           activeItemIndex={activeItemIndex}
+          activeItemProgress={activeItemProgress}
+          scrollOffsetPixels={scrollOffsetPixels}
         />
       </div>
 

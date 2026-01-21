@@ -43,15 +43,15 @@ export const TimelineView: React.FC<Props> = ({
                 }}
             >
                 <div className="max-w-md mx-auto pt-0 pb-96">
-                    {items.map((item, index) => (
-                        <TimelineItem
-                            key={item.id}
-                            item={item}
-                            isActive={index === activeItemIndex}
-                            isPast={index < activeItemIndex}
-                            progress={index === activeItemIndex ? activeItemProgress : (index < activeItemIndex ? 1 : 0)}
-                        />
-                    ))}
+                    <TimelineItem
+                        key={item.id}
+                        item={{
+                            ...item,
+                            progress: index === activeItemIndex ? activeItemProgress : (index < activeItemIndex ? 1 : 0)
+                        }}
+                        isActive={index === activeItemIndex}
+                        isPast={index < activeItemIndex}
+                    />
                 </div>
             </div>
         </div>
