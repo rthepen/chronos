@@ -25,35 +25,52 @@ function App() {
     return WorkoutGenerator.generateWorkout(selectedExercises, settings);
   }, []);
 
-  const chronos = useChronos(timeline);
-  useAudio(chronos.activeItemIndex, timeline);
+  const {
+    activeItemIndex,
+    activeItemProgress,
+    scrollOffsetPixels,
+    timeElapsed,
+    isStartupFrozen,
+    releaseStart,
+    workoutStartTime
+  } = useChronos(timeline);
+
+  // Audio Hook
+  useAudio(activeItemIndex, timeline);
+
+  const toggleFreeze = releaseStart;
+  const startupOffsetMs = 30000; // Hardcoded default for now, or derive if useChronos exports it
 
   return (
-    <div className="fixed inset-0 bg-nano-bg text-white overflow-hidden font-mono select-none">
-      {/* Layer 1: The Timeline (Full Height, Scrollable) */}
-      <div className="absolute inset-0">
+    <div className="fixed inset-0 bg-nano-bg text-white font-mono select-none overflow-hidden touch-none">
+      {/* Layer 1: The Timeline (Background/Scroll) */}
+      <div className="absolute inset-0 z-0">
         <TimelineView
           items={timeline}
-          activeItemIndex={chronos.activeItemIndex}
-          activeItemProgress={chronos.activeItemProgress}
-          scrollOffsetPixels={chronos.scrollOffsetPixels}
+          activeItemIndex={activeItemIndex}
+          activeItemProgress={activeItemProgress}
+          scrollOffsetPixels={scrollOffsetPixels}
         />
       </div>
 
-      {/* Layer 2: Master Clock (Overlay) */}
-      <MasterClock
-        timeElapsed={chronos.timeElapsed}
-        isFrozen={chronos.isStartupFrozen}
-      />
+      {/* Layer 2: Master Clock (Fixed Overlay) */}
+      <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none">
+        <MasterClock
+          timeElapsed={timeElapsed}
+          isFrozen={isStartupFrozen}
+        />
+      </div>
 
-      {/* Layer 3: Control Deck (Fixed Bottom) */}
-      <ControlDeck
-        isFrozen={chronos.isStartupFrozen}
-        onRelease={chronos.releaseStart}
-      />
+      {/* Layer 3: Controls (Bottom Fixed) */}
+      <div className="absolute bottom-6 left-0 right-0 z-30 flex justify-center">
+        <ControlDeck
+          isFrozen={isStartupFrozen}
+          onToggleFreeze={toggleFreeze}
+        />
+      </div>
 
-      {/* Gradient Ambient Effects */}
-      <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-nano-bg to-transparent pointer-events-none z-40" />
+      {/* Gradient Ambient Effects (Optional, kept for aesthetics if valid) */}
+      <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-nano-bg to-transparent pointer-events-none z-10" />
     </div>
   )
 }

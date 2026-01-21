@@ -26,10 +26,11 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
                 !isActive && !isPast && "bg-slate-900/50 opacity-60",
 
                 // Type-Specific Border/Glow for Active/Future
-                item.type === 'WORK' && !isPast && "border-l-4 border-l-nano-green",
-                (item.type === 'REST') && !isPast && "border-l-4 border-l-nano-blue",
-                (item.type === 'PREPARE' || item.type === 'ROUND_REST') && !isPast && "border-l-4 border-l-nano-orange",
-                item.type === 'FINISH' && !isPast && "border-l-4 border-l-yellow-400"
+                item.type === 'WORK' && !isPast && "border-l-4 border-l-nano-green bg-nano-green/10",
+                (item.type === 'REST') && !isPast && "border-l-4 border-l-nano-blue bg-nano-blue/10",
+                (item.type === 'PREPARE') && !isPast && "border-l-4 border-l-nano-orange bg-nano-orange/10",
+                (item.type === 'ROUND_REST') && !isPast && "border-l-4 border-l-purple-500 bg-purple-500/10",
+                item.type === 'FINISH' && !isPast && "border-l-4 border-l-yellow-400 bg-yellow-400/10"
             )}
         >
             {/* Progress Fill */}
@@ -38,7 +39,8 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
                     "absolute top-0 left-0 h-full opacity-30 transition-none", // transition-none for instant updates
                     item.type === 'WORK' && "bg-nano-green",
                     (item.type === 'REST') && "bg-nano-blue",
-                    (item.type === 'PREPARE' || item.type === 'ROUND_REST') && "bg-nano-orange",
+                    (item.type === 'PREPARE') && "bg-nano-orange",
+                    (item.type === 'ROUND_REST') && "bg-purple-500",
                     item.type === 'FINISH' && "bg-yellow-400"
                 )}
                 style={{ width: `${progress * 100}%` }}
