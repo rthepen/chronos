@@ -1,0 +1,29 @@
+/**
+ * CHRONOS ENGINE TYPES
+ *
+ * Core data structures for the FlowState timer engine.
+ */
+
+export interface TimelineItem {
+    durationMs: number;
+    status: 'work' | 'rest' | 'switch';
+    progress: number; // 0 to 1
+    label: string;
+    // Add other properties as needed
+}
+
+export interface ChronosState {
+    timeline: TimelineItem[];
+    workoutStartTime: number; // Timestamp in ms
+    isStartupFrozen: boolean; // TRUE = "Hold" mode (Floating Start)
+    startupOffsetMs: number; // Default e.g., 30000
+
+    // ENGINE LOGIC:
+    // If `isStartupFrozen` is TRUE:
+    //   The UI displays `startupOffsetMs` (static).
+    //   The `workoutStartTime` is continuously updated to `Date.now() + startupOffsetMs`.
+    //
+    // If `isStartupFrozen` is FALSE:
+    //   The UI displays `workoutStartTime - Date.now()`.
+    //   The `workoutStartTime` is fixed.
+}

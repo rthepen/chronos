@@ -1,0 +1,20 @@
+# Antigravity Asset Protection
+# -----------------------------------------------------------------------------
+# 1. ASSET PROTECTION
+# Do NOT modify, delete, or overwrite files in the following directories without
+# explicit user confirmation:
+# - public/audio/
+# - public/images/
+#
+# 2. DATA INTEGRITY
+# - src/data/workoutdatabase.json is a READ-ONLY reference.
+# - Do NOT hardcode data changes into this file.
+#
+# 3. CHRONOS ENGINE RULES
+# - Use Date.now() for all timing operations.
+# - Do NOT use accumulated setInterval (drift prevention).
+# - Follow the "Floating Start" architecture defined in src/types/chronos.ts.
+
+# 4. TECH STACK
+# - Vite, React, TypeScript, TailwindCSS
+# - Use clsx and tailwind-merge for class manipulation.
