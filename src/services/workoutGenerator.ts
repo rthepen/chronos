@@ -8,17 +8,17 @@ export interface Exercise {
 }
 
 export interface WorkoutSettings {
-    workTimeSec: number;
-    restTimeSec: number;
+    workMs: number;
+    restMs: number;
     sets: number;
-    roundRestSec: number;
+    roundRestMs: number;
 }
 
 export const WorkoutGenerator = {
     /**
      * Flattens a list of Exercises + Settings into a linear Timeline.
      */
-    generateWorkout: (exercises: Exercise[], settings: WorkoutSettings): TimelineItem[] => {
+    generate: (exercises: Exercise[], settings: WorkoutSettings): TimelineItem[] => {
         const timeline: TimelineItem[] = [];
         let itemIdCounter = 1;
 
@@ -26,8 +26,6 @@ export const WorkoutGenerator = {
         const nextId = () => `item-${itemIdCounter++}`;
 
         // 1. PREPARE Phase (Fixed 10s or custom?)
-        // Let's assume hardcoded 10s for now, or maybe 0 if not desired.
-        // Rule: Start with 10s Prep.
         timeline.push({
             id: nextId(),
             type: 'PREPARE',
@@ -48,7 +46,7 @@ export const WorkoutGenerator = {
                 timeline.push({
                     id: nextId(),
                     type: 'WORK',
-                    durationMs: settings.workTimeSec * 1000,
+                    durationMs: settings.workMs, // Already in ms
                     progress: 0,
                     label: exercise.exercise_name,
                     exerciseId: exercise.id
@@ -60,7 +58,7 @@ export const WorkoutGenerator = {
                     timeline.push({
                         id: nextId(),
                         type: 'REST',
-                        durationMs: settings.restTimeSec * 1000,
+                        durationMs: settings.restMs, // Already in ms
                         progress: 0,
                         label: 'Rest',
                     });
@@ -72,7 +70,7 @@ export const WorkoutGenerator = {
                 timeline.push({
                     id: nextId(),
                     type: 'ROUND_REST',
-                    durationMs: settings.roundRestSec * 1000,
+                    durationMs: settings.roundRestMs, // Already in ms
                     progress: 0,
                     label: 'Switch Exercise',
                 });
