@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { MasterClock } from './components/HUD/MasterClock'
 import { ControlDeck } from './components/HUD/ControlDeck'
 import { TimelineView } from './components/Timeline/TimelineView'
@@ -8,71 +8,56 @@ import { WorkoutGenerator } from './services/workoutGenerator'
 import workoutData from './data/workoutdatabase.json'
 
 function App() {
-  // 1. Generate the Workout Timeline
-  // For demo: Pick 3 exercises and default settings
+  // 1. Initialize State
+  const [workoutSettings] = useState({ workTimeSec: 45, restTimeSec: 15, sets: 3, roundRestSec: 30 });
+
+  // 2. Generate Timeline
   const timeline = useMemo(() => {
-    // Select first 3 items from the DB
-    const selectedExercises = workoutData.slice(0, 3);
+    // Select first 5 items from the DB for a good demo
+    const selectedExercises = workoutData.slice(0, 5);
+    return WorkoutGenerator.generateWorkout(selectedExercises, workoutSettings);
+  }, [workoutSettings]);
 
-    // Default Settings (as per requirements)
-    const settings = {
-      workTimeSec: 45,
-      restTimeSec: 15,
-      sets: 2,
-      roundRestSec: 30
-    };
+  // 3. Init Engine
+  const engine = useChronos(timeline, 30000); // 30s startup buffer
 
-    return WorkoutGenerator.generateWorkout(selectedExercises, settings);
-  }, []);
-
-  const {
-    activeItemIndex,
-    activeItemProgress,
-    scrollOffsetPixels,
-    timeElapsed,
-    isStartupFrozen,
-    releaseStart,
-    workoutStartTime
-  } = useChronos(timeline);
-
-  // Audio Hook
-  useAudio(activeItemIndex, timeline);
-
-  const toggleFreeze = releaseStart;
-  const startupOffsetMs = 30000; // Hardcoded default for now, or derive if useChronos exports it
+  // 4. Init Audio
+  useAudio(engine.activeItemIndex, timeline);
 
   return (
-    <div className="fixed inset-0 bg-nano-bg text-white font-mono select-none overflow-hidden touch-none">
-      {/* Layer 1: The Timeline (Background/Scroll) */}
+    <div className="fixed inset-0 bg-slate-900 text-white font-mono select-none overflow-hidden overscroll-none touch-none">
+
+      {/* Layer 1: Scrolling Timeline */}
       <div className="absolute inset-0 z-0">
         <TimelineView
           items={timeline}
-          activeItemIndex={activeItemIndex}
-          activeItemProgress={activeItemProgress}
-          scrollOffsetPixels={scrollOffsetPixels}
+          activeItemIndex={engine.activeItemIndex}
+          activeItemProgress={engine.activeItemProgress}
+          scrollOffsetPixels={engine.scrollOffsetPixels}
         />
       </div>
 
-      {/* Layer 2: Master Clock (Fixed Overlay) */}
-      <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none">
+      {/* Layer 2: Master Clock (Top Overlay) */}
+      <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none p-4 flex justify-center">
         <MasterClock
-          timeElapsed={timeElapsed}
-          isFrozen={isStartupFrozen}
+          timeElapsed={engine.timeElapsed}
+          isFrozen={engine.isStartupFrozen}
         />
       </div>
 
-      {/* Layer 3: Controls (Bottom Fixed) */}
-      <div className="absolute bottom-6 left-0 right-0 z-30 flex justify-center">
+      {/* Layer 3: Controls (Bottom Overlay) */}
+      <div className="absolute bottom-8 left-0 right-0 z-30 flex justify-center pointer-events-auto">
         <ControlDeck
-          isFrozen={isStartupFrozen}
-          onToggleFreeze={toggleFreeze}
+          isFrozen={engine.isStartupFrozen}
+          onToggleFreeze={engine.releaseStart}
         />
       </div>
 
-      {/* Gradient Ambient Effects (Optional, kept for aesthetics if valid) */}
-      <div className="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-nano-bg to-transparent pointer-events-none z-10" />
+      {/* Optional: Simple Vignette/Gradient for aesthetics */}
+      <div className="fixed top-0 left-0 w-full h-24 bg-gradient-to-b from-slate-900 to-transparent pointer-events-none z-10" />
+      <div className="fixed bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none z-10" />
     </div>
-  )
+  );
 }
 
 export default App

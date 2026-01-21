@@ -83,10 +83,6 @@ export const WorkoutGenerator = {
         timeline.push({
             id: nextId(),
             type: 'FINISH',
-            durationMs: 0, // Instant transition or hold forever? 
-            // Engine might need non-zero to "stick" on it? 
-            // Or engine just stays at end index. 
-            // Let's give it a duration so it has "presence" in the scrolling list if we want to see "DONE".
             durationMs: 5000,
             progress: 0,
             label: 'Workout Complete',

@@ -1,4 +1,17 @@
 {
-  "coaches": {},
+  "coaches": {
+    "eva": {
+      "work": [
+        "work_start_1.mp3",
+        "work_start_2.mp3",
+        "work_start_3.mp3",
+        "work_start_4.mp3"
+      ],
+      "rest": [
+        "rest_set_start_1.mp3",
+        "rest_set_tips_1.mp3"
+      ]
+    }
+  },
   "sfx": {}
 }

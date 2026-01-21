@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { TimelineItem } from './TimelineItem';
 import type { TimelineItem as TimelineItemType } from '../../types/chronos';
 

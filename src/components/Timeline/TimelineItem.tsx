@@ -17,7 +17,7 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
                 // Active: Bright, scaled up slightly
                 isActive && "scale-105 shadow-xl border border-slate-700 z-10",
                 isActive && item.type === 'WORK' && "bg-slate-800",
-                isActive && item.type !== 'WORK' && "bg-slate-900", // Darker for rest
+                isActive && item.type !== 'WORK' && "bg-slate-900", // Darker for rest phases
 
                 // Past: Dimmed significantly
                 isPast && "opacity-30 grayscale",
@@ -30,7 +30,7 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
                 (item.type === 'REST') && !isPast && "border-l-4 border-l-nano-blue bg-nano-blue/10",
                 (item.type === 'PREPARE') && !isPast && "border-l-4 border-l-nano-orange bg-nano-orange/10",
                 (item.type === 'ROUND_REST') && !isPast && "border-l-4 border-l-purple-500 bg-purple-500/10",
-                item.type === 'FINISH' && !isPast && "border-l-4 border-l-yellow-400 bg-yellow-400/10"
+                item.type === 'FINISH' && !isPast && "border-l-4 border-l-nano-gold bg-nano-gold/10"
             )}
         >
             {/* Progress Fill */}
@@ -54,7 +54,7 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
                 )}>
                     {item.label}
                 </span>
-                <span className="font-mono text-slate-400 text-sm">
+                <span className="font-mono text-slate-400 text-sm tabular-nums">
                     {Math.floor((item.durationMs / 1000) / 60)}:{((item.durationMs / 1000) % 60).toString().padStart(2, '0')}
                 </span>
             </div>

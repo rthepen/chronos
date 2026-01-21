@@ -32,7 +32,7 @@ export const useChronos = (
     // When frozen, this keeps moving into the future. When released, it stays fixed.
     const [workoutStartTime, setWorkoutStartTime] = useState<number>(Date.now() + startupOffsetMs);
 
-    const requestRef = useRef<number>();
+    const requestRef = useRef<number | undefined>(undefined);
 
     // THE GAME LOOP
     const tick = useCallback(() => {
