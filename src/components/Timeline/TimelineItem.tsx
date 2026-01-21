@@ -1,7 +1,7 @@
 import React from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { TimelineItem as TimelineItemType } from '../../types/chronos';
+import type { TimelineItem as TimelineItemType } from '../../types/chronos';
 
 interface Props {
     item: TimelineItemType;

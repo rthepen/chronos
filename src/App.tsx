@@ -6,7 +6,7 @@ import { ControlDeck } from './components/HUD/ControlDeck';
 import { TimelineView } from './components/Timeline/TimelineView';
 import { WorkoutGenerator } from './services/workoutGenerator';
 import workoutDatabase from './data/workoutdatabase.json';
-import { Exercise } from './types/chronos';
+import type { Exercise } from './types/chronos';
 
 export default function App() {
   // 1. Settings State

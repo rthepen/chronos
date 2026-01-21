@@ -4,6 +4,18 @@
  * Core data structures for the FlowState timer engine.
  */
 
+export interface Exercise {
+    id: string;
+    exercise_name: string;
+    category: string;
+    material_name: string;
+    material_description?: string;
+    instructions?: string;
+    video_search_url?: string;
+    thumbnail?: string;
+    check_number?: number;
+}
+
 export interface TimelineItem {
     id: string;
     durationMs: number;
