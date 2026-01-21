@@ -39,15 +39,33 @@ export const useAudio = (
         if (!item) return;
 
         let category: 'work' | 'rest' | null = null;
-        if (item.status === 'work') category = 'work';
-        else if (item.status === 'rest') category = 'rest';
+
+        // Map new Types to Audio Categories
+        switch (item.type) {
+            case 'WORK':
+                category = 'work';
+                break;
+            case 'REST':
+            case 'ROUND_REST':
+            case 'PREPARE': // Maybe silence or special 'get ready'? For now 'rest' implies downtime.
+                category = 'rest';
+                break;
+            case 'FINISH':
+                // Handled separately in the effect roughly, but if we need a direct cue here:
+                // The effect handles "Finish" when index exceeds length. 
+                // But if we have a 'FINISH' item, we might want to play it when entering that item.
+                // For now, let's keep the Effect's finish logic for end-of-playlist,
+                // OR we play 'finish' when entering the FINISH item.
+                // Let's assume the 'FINISH' item is the visual "Done" state.
+                AudioEngine.playCue('eva', 'finish');
+                return;
+        }
 
         if (category) {
             // Hardcoded 'eva' per requirements
             AudioEngine.playCue('eva', category);
         } else {
-            // 'switch' or other statuses
-            console.log(`[useAudio] No cue for status: ${item.status}`);
+            console.log(`[useAudio] No cue for type: ${item.type}`);
         }
     };
 };

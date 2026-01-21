@@ -15,18 +15,31 @@ export const TimelineItem: React.FC<Props> = ({ item, isActive, isPast, progress
             className={clsx(
                 "relative w-full h-16 mb-2 rounded-lg overflow-hidden flex items-center px-4 transition-all duration-75 ease-linear",
                 // Active: Bright, scaled up slightly
-                isActive && "bg-slate-800 scale-105 shadow-xl border border-slate-700 z-10",
+                isActive && "scale-105 shadow-xl border border-slate-700 z-10",
+                isActive && item.type === 'WORK' && "bg-slate-800",
+                isActive && item.type !== 'WORK' && "bg-slate-900", // Darker for rest
+
                 // Past: Dimmed significantly
-                isPast && "bg-slate-900/30 opacity-30 grayscale",
+                isPast && "opacity-30 grayscale",
+
                 // Future: Standard opacity
-                !isActive && !isPast && "bg-slate-900/50 opacity-60"
+                !isActive && !isPast && "bg-slate-900/50 opacity-60",
+
+                // Type-Specific Border/Glow for Active/Future
+                item.type === 'WORK' && !isPast && "border-l-4 border-l-nano-green",
+                (item.type === 'REST' || item.type === 'ROUND_REST') && !isPast && "border-l-4 border-l-nano-blue",
+                item.type === 'PREPARE' && !isPast && "border-l-4 border-l-nano-orange",
+                item.type === 'FINISH' && !isPast && "border-l-4 border-l-yellow-400"
             )}
         >
             {/* Progress Fill */}
             <div
                 className={clsx(
                     "absolute top-0 left-0 h-full opacity-30 transition-none", // transition-none for instant updates
-                    item.status === 'work' ? "bg-nano-green" : "bg-nano-blue"
+                    item.type === 'WORK' && "bg-nano-green",
+                    (item.type === 'REST' || item.type === 'ROUND_REST') && "bg-nano-blue",
+                    item.type === 'PREPARE' && "bg-nano-orange",
+                    item.type === 'FINISH' && "bg-yellow-400"
                 )}
                 style={{ width: `${progress * 100}%` }}
             />

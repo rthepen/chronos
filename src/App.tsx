@@ -1,27 +1,38 @@
+import { useMemo } from 'react';
 import { MasterClock } from './components/HUD/MasterClock'
 import { ControlDeck } from './components/HUD/ControlDeck'
 import { TimelineView } from './components/Timeline/TimelineView'
 import { useChronos } from './hooks/useChronos'
-import type { TimelineItem } from './types/chronos'
-
-// Mock Data (Moved from TimelineView)
-const MOCK_TIMELINE: TimelineItem[] = [
-  { id: '1', status: 'work', durationMs: 45000, label: 'Kettlebell Swings', progress: 0 },
-  { id: '2', status: 'rest', durationMs: 15000, label: 'Rest', progress: 0 },
-  { id: '3', status: 'work', durationMs: 45000, label: 'Goblet Squats', progress: 0 },
-  { id: '4', status: 'rest', durationMs: 15000, label: 'Rest', progress: 0 },
-  { id: '5', status: 'work', durationMs: 45000, label: 'Push Ups', progress: 0 },
-];
+import { useAudio } from './hooks/useAudio'
+import { WorkoutGenerator } from './services/workoutGenerator'
+import workoutData from './data/workoutdatabase.json'
 
 function App() {
-  const chronos = useChronos(MOCK_TIMELINE);
-  useAudio(chronos.activeItemIndex, MOCK_TIMELINE);
+  // 1. Generate the Workout Timeline
+  // For demo: Pick 3 exercises and default settings
+  const timeline = useMemo(() => {
+    // Select first 3 items from the DB
+    const selectedExercises = workoutData.slice(0, 3);
+
+    // Default Settings (as per requirements)
+    const settings = {
+      workTimeSec: 45,
+      restTimeSec: 15,
+      sets: 2,
+      roundRestSec: 30
+    };
+
+    return WorkoutGenerator.generateWorkout(selectedExercises, settings);
+  }, []);
+
+  const chronos = useChronos(timeline);
+  useAudio(chronos.activeItemIndex, timeline);
 
   return (
     <div className="relative w-full h-screen bg-nano-bg text-slate-200 overflow-hidden font-sans selection:bg-nano-green selection:text-nano-bg">
       {/* Layer 1: The Timeline (Full Height, Scrollable) */}
       <TimelineView
-        items={MOCK_TIMELINE}
+        items={timeline}
         activeItemIndex={chronos.activeItemIndex}
         activeItemProgress={chronos.activeItemProgress}
         scrollOffsetPixels={chronos.scrollOffsetPixels}

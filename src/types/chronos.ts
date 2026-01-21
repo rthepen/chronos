@@ -7,9 +7,10 @@
 export interface TimelineItem {
     id: string;
     durationMs: number;
-    status: 'work' | 'rest' | 'switch';
+    type: 'WORK' | 'REST' | 'PREPARE' | 'ROUND_REST' | 'FINISH';
     progress: number; // 0 to 1
     label: string;
+    exerciseId?: string; // Link back to full exercise data
     // Add other properties as needed
 }
 
